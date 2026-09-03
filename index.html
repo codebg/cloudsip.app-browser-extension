@@ -319,6 +319,27 @@
                   <input class="settings-input" id="settingsPassword" type="password" autocomplete="current-password">
                   <div class="settings-help">Stored locally in this browser.</div>
                 </div>
+                <div class="form-group">
+                  <label for="settingsStunUrls">STUN URLs</label>
+                  <textarea class="settings-input" id="settingsStunUrls" rows="2" placeholder="stun:stun.example.com:3478"></textarea>
+                  <div class="settings-help">One URL per line. Leave empty when STUN is not required.</div>
+                </div>
+                <div class="form-group">
+                  <label for="settingsTurnUrls">TURN URLs</label>
+                  <textarea class="settings-input" id="settingsTurnUrls" rows="2" placeholder="turns:turn.example.com:5349"></textarea>
+                </div>
+                <div class="form-group">
+                  <label for="settingsTurnUsername">TURN Username</label>
+                  <input class="settings-input" id="settingsTurnUsername" type="text" autocomplete="off">
+                </div>
+                <div class="form-group">
+                  <label for="settingsTurnCredential">TURN Credential</label>
+                  <input class="settings-input" id="settingsTurnCredential" type="password" autocomplete="off">
+                </div>
+                <div class="toggle-row">
+                  <input id="settingsSessionTimers" type="checkbox">
+                  <label for="settingsSessionTimers"><strong>SIP session timers</strong><span>Keep long-running calls synchronized with the SIP server.</span></label>
+                </div>
                 <div class="settings-actions">
                   <button class="settings-btn primary" id="saveSettings" type="button">Save Settings</button>
                 </div>
