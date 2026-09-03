@@ -12,6 +12,7 @@ const fields = {
   sipUri: 'settingsSipUri',
   displayName: 'settingsDisplayName',
   password: 'settingsPassword',
+  sessionTimers: 'settingsSessionTimers',
   autoAnswer: 'settingsAutoAnswer',
   autoRecordCalls: 'settingsAutoRecordCalls',
   autoHoldOnSwitch: 'settingsAutoHoldOnSwitch',
@@ -56,6 +57,13 @@ function buildSipUri(extension, sipDomain, sipUri, previousSettings){
 
 function renderSettingsForm(settings = getSettings()){
   Object.entries(fields).forEach(([key, id]) => setFieldValue(id, settings[key]));
+  const iceServers = Array.isArray(settings.iceServers) ? settings.iceServers : [];
+  const stunUrls = iceServers.flatMap((server) => server.urls || []).filter((url) => String(url).startsWith('stun:'));
+  const turn = iceServers.find((server) => (server.urls || []).some((url) => /^turns?:/.test(url))) || {};
+  setFieldValue('settingsStunUrls', stunUrls.join('\n'));
+  setFieldValue('settingsTurnUrls', Array.isArray(turn.urls) ? turn.urls.filter((url) => /^turns?:/.test(url)).join('\n') : '');
+  setFieldValue('settingsTurnUsername', turn.username || '');
+  setFieldValue('settingsTurnCredential', turn.credential || '');
 }
 
 function collectSettings(){
@@ -63,6 +71,15 @@ function collectSettings(){
   const extension = getFieldValue(fields.extension);
   const sipDomain = getFieldValue(fields.sipDomain);
   const sipUri = buildSipUri(extension, sipDomain, getFieldValue(fields.sipUri), current);
+  const stunUrls = getFieldValue('settingsStunUrls').split(/[\n,]+/).map((url) => url.trim()).filter(Boolean);
+  const turnUrls = getFieldValue('settingsTurnUrls').split(/[\n,]+/).map((url) => url.trim()).filter(Boolean);
+  const iceServers = [];
+  if (stunUrls.length) iceServers.push({ urls: stunUrls });
+  if (turnUrls.length) iceServers.push({
+    urls: turnUrls,
+    username: getFieldValue('settingsTurnUsername'),
+    credential: getFieldValue('settingsTurnCredential')
+  });
 
   return {
     ...current,
@@ -73,6 +90,8 @@ function collectSettings(){
     sipUri,
     displayName: getFieldValue(fields.displayName) || extension,
     password: getFieldValue(fields.password),
+    iceServers,
+    sessionTimers: getFieldValue(fields.sessionTimers),
     autoAnswer: getFieldValue(fields.autoAnswer),
     autoRecordCalls: getFieldValue(fields.autoRecordCalls),
     autoHoldOnSwitch: getFieldValue(fields.autoHoldOnSwitch),
