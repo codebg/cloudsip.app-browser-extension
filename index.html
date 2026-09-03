@@ -432,10 +432,40 @@
             </button>
             <div class="settings-accordion-body" data-settings-accordion-body="diagnostics">
               <div class="diagnostics-grid" aria-label="WebRTC diagnostics">
-                <div><span>Browser name</span><strong id="diagBrowserName">—</strong></div><div><span>Microphone supported</span><strong id="diagMicrophoneSupported">—</strong></div><div><span>Recording supported</span><strong id="diagRecordingSupported">—</strong></div><div><span>Speaker selection supported</span><strong id="diagSpeakerSelectionSupported">—</strong></div><div><span>Secure context</span><strong id="diagSecureContext">—</strong></div><div><span>WebRTC supported</span><strong id="diagWebRtcSupported">—</strong></div><div><span>Microphone permission status</span><strong id="diagMicrophonePermission">—</strong></div><div><span>Selected microphone</span><strong id="diagSelectedMicrophone">—</strong></div><div><span>Selected speaker</span><strong id="diagSelectedSpeaker">—</strong></div><div><span>SIP registration state</span><strong id="diagSipRegistration">—</strong></div><div><span>WebSocket state</span><strong id="diagWebSocketState">—</strong></div><div><span>Active line count</span><strong id="diagActiveLineCount">0</strong></div><div><span>Current active call ID</span><strong id="diagActiveCallId">—</strong></div><div><span>ICE connection state</span><strong id="diagIceConnectionState">—</strong></div><div><span>RTP audio tracks count</span><strong id="diagRtpAudioTracksCount">0</strong></div>
+                <div><span>Browser</span><strong id="diagBrowserName">—</strong></div>
+                <div><span>Secure context</span><strong id="diagSecureContext">—</strong></div>
+                <div><span>WebRTC</span><strong id="diagWebRtcSupported">—</strong></div>
+                <div><span>Microphone</span><strong id="diagMicrophoneSupported">—</strong></div>
+                <div><span>Microphone permission</span><strong id="diagMicrophonePermission">—</strong></div>
+                <div><span>Selected microphone</span><strong id="diagSelectedMicrophone">—</strong></div>
+                <div><span>Selected speaker</span><strong id="diagSelectedSpeaker">—</strong></div>
+                <div><span>Recording</span><strong id="diagRecordingSupported">—</strong></div>
+                <div><span>Speaker selection</span><strong id="diagSpeakerSelectionSupported">—</strong></div>
+                <div><span>SIP registration</span><strong id="diagSipRegistration">—</strong></div>
+                <div><span>WebSocket state</span><strong id="diagWebSocketState">—</strong></div>
+                <div><span>Active lines</span><strong id="diagActiveLineCount">0</strong></div>
+                <div><span>Active call ID</span><strong id="diagActiveCallId">—</strong></div>
+                <div><span>ICE gathering</span><strong id="diagIceGatheringState">—</strong></div>
+                <div><span>ICE connection</span><strong id="diagIceConnectionState">—</strong></div>
+                <div class="diagnostics-wide"><span>Local candidate</span><strong id="diagLocalCandidate">—</strong></div>
+                <div class="diagnostics-wide"><span>Remote candidate</span><strong id="diagRemoteCandidate">—</strong></div>
+                <div><span>TURN in use</span><strong id="diagTurnUsage">—</strong></div>
+                <div><span>Codec</span><strong id="diagCodec">—</strong></div>
+                <div><span>Jitter</span><strong id="diagJitter">—</strong></div>
+                <div><span>Packet loss</span><strong id="diagPacketLoss">—</strong></div>
+                <div><span>Round-trip time</span><strong id="diagRoundTripTime">—</strong></div>
+                <div><span>Inbound bitrate</span><strong id="diagBitrate">—</strong></div>
+                <div><span>Audio level</span><strong id="diagAudioLevel">—</strong></div>
+                <div><span>RTP audio tracks</span><strong id="diagRtpAudioTracksCount">0</strong></div>
+                <div class="diagnostics-wide"><span>WSS test result</span><strong id="diagWssTestResult">Not tested</strong></div>
               </div>
               <div class="diagnostics-actions">
-                <button class="settings-btn secondary" id="diagTestMicrophone" type="button">Test microphone</button><button class="settings-btn primary" id="retryMicrophonePermission" type="button">Allow Microphone / Retry SIP</button><button class="settings-btn secondary" id="diagTestSpeaker" type="button">Test speaker</button><button class="settings-btn primary" id="diagReconnectSip" type="button">Reconnect SIP</button>
+                <button class="settings-btn secondary" id="diagTestMicrophone" type="button">Test microphone</button>
+                <button class="settings-btn primary" id="retryMicrophonePermission" type="button">Allow Microphone / Retry SIP</button>
+                <button class="settings-btn secondary" id="diagTestSpeaker" type="button">Test speaker</button>
+                <button class="settings-btn primary" id="diagReconnectSip" type="button">Reconnect SIP</button>
+                <button class="settings-btn secondary" id="diagTestWss" type="button">Test WSS</button>
+                <button class="settings-btn primary" id="diagExportReport" type="button">Export report</button>
               </div>
             </div>
           </div>
