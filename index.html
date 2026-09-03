@@ -290,6 +290,31 @@
             </button>
             <div class="settings-accordion-body" data-settings-accordion-body="sip">
               <div class="settings-form" >
+                <div class="form-group">
+                  <label for="settingsSetupMode">Setup mode</label>
+                  <select class="settings-select" id="settingsSetupMode"><option value="quick">Quick setup</option><option value="advanced">Advanced setup</option></select>
+                </div>
+                <div class="form-group">
+                  <label for="settingsProfileSelect">SIP profile</label>
+                  <select class="settings-select" id="settingsProfileSelect"><option value="">Current settings</option></select>
+                </div>
+                <div class="form-group">
+                  <label for="settingsProfileName">Profile name</label>
+                  <input class="settings-input" id="settingsProfileName" type="text" placeholder="Office PBX" autocomplete="off">
+                </div>
+                <div class="settings-actions">
+                  <button class="settings-btn secondary" id="loadSipProfile" type="button">Load Profile</button>
+                  <button class="settings-btn secondary" id="saveSipProfile" type="button">Save Profile</button>
+                  <button class="settings-btn danger" id="deleteSipProfile" type="button">Delete Profile</button>
+                </div>
+                <div class="settings-subsection" id="quickSetupFields">
+                  <div class="form-group"><label for="quickPbxHost">PBX Host</label><input class="settings-input" id="quickPbxHost" type="text" placeholder="pbx.example.com" autocomplete="off"></div>
+                  <div class="form-group"><label for="quickExtension">Extension</label><input class="settings-input" id="quickExtension" type="text" autocomplete="off"></div>
+                  <div class="form-group"><label for="quickDisplayName">Display Name</label><input class="settings-input" id="quickDisplayName" type="text" autocomplete="off"></div>
+                  <div class="form-group"><label for="quickPassword">Password</label><input class="settings-input" id="quickPassword" type="password" autocomplete="current-password"></div>
+                  <div class="settings-help">Quick setup uses wss://PBX-HOST:8089/ws and builds the SIP URI automatically.</div>
+                </div>
+                <div class="settings-subsection" id="advancedSetupFields" hidden>
                 <div class="form-group" style="display:none">
                   <label for="settingsCompanyWebsite">Company Website</label>
                   <input class="settings-input" id="settingsCompanyWebsite" type="hidden" autocomplete="url" readonly disabled >
@@ -340,8 +365,19 @@
                   <input id="settingsSessionTimers" type="checkbox">
                   <label for="settingsSessionTimers"><strong>SIP session timers</strong><span>Keep long-running calls synchronized with the SIP server.</span></label>
                 </div>
+                </div>
+                <div class="toggle-row">
+                  <input id="settingsRememberPassword" type="checkbox">
+                  <label for="settingsRememberPassword"><strong>Remember password</strong><span>Turn off to keep the SIP password only for this browser session.</span></label>
+                </div>
                 <div class="settings-actions">
                   <button class="settings-btn primary" id="saveSettings" type="button">Save Settings</button>
+                </div>
+                <div class="form-group">
+                  <label>Configuration file</label>
+                  <div class="toggle-row"><input id="settingsExportPassword" type="checkbox"><label for="settingsExportPassword"><strong>Include password in export</strong><span>Disabled by default.</span></label></div>
+                  <input id="configurationFile" type="file" accept="application/json,.json" hidden>
+                  <div class="settings-actions"><button class="settings-btn secondary" id="importConfiguration" type="button">Import JSON</button><button class="settings-btn secondary" id="exportConfiguration" type="button">Export JSON</button></div>
                 </div>
               </div>
             </div>
