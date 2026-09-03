@@ -2018,6 +2018,8 @@ body{padding:0}
 .settings-accordion-body{display:none;padding:0 14px 14px}
 .settings-accordion.open .settings-accordion-body{display:block}
 .settings-form{display:grid;gap:10px}
+.settings-subsection{display:grid;gap:10px}
+.settings-input:is(textarea){height:auto;min-height:76px;padding:10px 13px;resize:vertical}
 .form-group{display:grid;gap:5px}
 .form-group label{font-size:12px;font-weight:900;color:var(--ink)}
 .settings-input,.settings-select,.form-control{height:42px;border-radius:14px;padding:0 13px;font-size:14px;font-weight:600}
