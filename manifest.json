@@ -7,13 +7,16 @@
     "storage",
     "sidePanel",
     "tabs",
-    "scripting"
+    "scripting",
+    "contextMenus"
   ],
-  "host_permissions": [
-    "<all_urls>"
+  "optional_host_permissions": [
+    "https://*/*",
+    "http://*/*"
   ],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.js",
+    "type": "module"
   },
   "side_panel": {
     "default_path": "index.html"
@@ -32,19 +35,5 @@
     "32": "assets/icons/icon-32.png",
     "48": "assets/icons/icon-48.png",
     "128": "assets/icons/icon-128.png"
-  },
-  "content_scripts": [
-    {
-      "matches": [
-        "<all_urls>"
-      ],
-      "js": [
-        "content-script.js"
-      ],
-      "css": [
-        "content-script.css"
-      ],
-      "run_at": "document_idle"
-    }
-  ]
+  }
 }
