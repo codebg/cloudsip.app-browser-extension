@@ -24,8 +24,12 @@ import { IS_EXTENSION } from './extension-env.js';
 const PENDING_DIAL_STORAGE_KEYS = [
   'cloudsipPendingDialNumber',
   'cloudsipPendingDialAt',
-  'cloudsipPendingDialAutoStart'
+  'cloudsipPendingDialAutoStart',
+  'cloudsipPendingDialSource',
+  'cloudsipPendingDialTabId'
 ];
+
+let browserCallContext = null;
 
 let lastPendingDial = {
   number: null,
@@ -61,6 +65,7 @@ function handleClickToCallNumber(number, options = {}){
   const cleanNumber = String(number || '').trim();
   if (!cleanNumber || shouldIgnoreDuplicatePendingDial(cleanNumber)) return;
 
+  browserCallContext = options.tabId ? { tabId: options.tabId, number: cleanNumber, source: options.source || 'browser' } : null;
   clearPendingDialStorage();
 
   state.typed = cleanNumber;
@@ -82,14 +87,16 @@ function initClickToCallListener(){
 
   chrome.runtime.onMessage.addListener((message) => {
     if (message.type === 'CLOUDSIP_PENDING_DIAL') {
-      handleClickToCallNumber(message.number, { autoStart: message.autoStart === true });
+      handleClickToCallNumber(message.number, { autoStart: message.autoStart === true, source: message.source, tabId: message.tabId });
     }
   });
 
   chrome.storage?.local?.get(PENDING_DIAL_STORAGE_KEYS, (result) => {
     if (!result.cloudsipPendingDialNumber) return;
     handleClickToCallNumber(result.cloudsipPendingDialNumber, {
-      autoStart: result.cloudsipPendingDialAutoStart === true
+      autoStart: result.cloudsipPendingDialAutoStart === true,
+      source: result.cloudsipPendingDialSource,
+      tabId: result.cloudsipPendingDialTabId
     });
   });
 
@@ -225,11 +232,16 @@ function initPresenceSipControls(){
 }
 
 function getSipHandlers(){
+  const notifyBrowser = (status) => {
+    if (!browserCallContext?.tabId || !globalThis.chrome?.runtime?.sendMessage) return;
+    chrome.runtime.sendMessage({ type: 'CLOUDSIP_CALL_STATUS', status, ...browserCallContext }).catch(() => {});
+    if (['ended', 'failed'].includes(status)) browserCallContext = null;
+  };
   return {
     onIncomingCall: handleIncomingCall,
-    onCallAccepted: handleCallAccepted,
-    onCallEnded: handleCallEnded,
-    onCallFailed: handleCallFailed,
+    onCallAccepted: (...args) => { handleCallAccepted(...args); notifyBrowser('accepted'); },
+    onCallEnded: (...args) => { handleCallEnded(...args); notifyBrowser('ended'); },
+    onCallFailed: (...args) => { handleCallFailed(...args); notifyBrowser('failed'); },
     muted: handleCallMuted,
     unmuted: handleCallUnmuted,
     hold: handleCallHold,
