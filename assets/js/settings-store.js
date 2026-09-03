@@ -12,6 +12,8 @@ export const defaultSettings = Object.freeze({
   sipUri: defaultConfig.sip.sipUri,
   displayName: defaultConfig.sip.displayName,
   password: defaultConfig.sip.password,
+  iceServers: defaultConfig.sip.iceServers,
+  sessionTimers: defaultConfig.sip.sessionTimers,
   autoAnswer: defaultConfig.settings.autoAnswer,
   autoRecordCalls: defaultConfig.settings.autoRecordCalls,
   autoHoldOnSwitch: defaultConfig.settings.autoHoldOnSwitch,
@@ -54,6 +56,16 @@ function normalizeSettings(settings = {}){
   nextSettings.sipUri = String(nextSettings.sipUri || '').trim() || `sip:${nextSettings.extension}@${nextSettings.sipDomain}`;
   nextSettings.displayName = String(nextSettings.displayName || '').trim() || nextSettings.extension;
   nextSettings.password = String(nextSettings.password || '');
+  nextSettings.iceServers = Array.isArray(nextSettings.iceServers)
+    ? nextSettings.iceServers.map((server) => ({
+        urls: Array.isArray(server?.urls)
+          ? server.urls.map((url) => String(url || '').trim()).filter(Boolean)
+          : String(server?.urls || '').split(/[\n,]+/).map((url) => url.trim()).filter(Boolean),
+        username: String(server?.username || ''),
+        credential: String(server?.credential || '')
+      })).filter((server) => server.urls.length)
+    : [];
+  nextSettings.sessionTimers = nextSettings.sessionTimers !== false;
   nextSettings.autoAnswer = Boolean(nextSettings.autoAnswer);
   nextSettings.autoRecordCalls = Boolean(nextSettings.autoRecordCalls);
   nextSettings.autoHoldOnSwitch = Boolean(nextSettings.autoHoldOnSwitch);
