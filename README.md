@@ -13,6 +13,9 @@ CloudSIP Browser Extension packages the CloudSIP WebRTC SIP softphone as a Chrom
 - Answer, reject, hang up, mute, hold, and resume calls.
 - Send DTMF tones from the in-call keypad.
 - Use blind transfer, consult transfer, consult calls, and conference controls where supported by the SIP server.
+- Choose one default transfer method while keeping the alternative in preferences.
+- Use call waiting, redial, recent-number shortcuts and dial-plan rules.
+- Select a ringtone per SIP profile and optionally enable WebHID headset controls or SIP MESSAGE.
 - Manage multiple active lines and return to the active call from the mini call banner.
 
 ### Browser extension workflow
@@ -88,6 +91,8 @@ STUN and TURN are optional. Direct connections remain the default when no ICE se
 Quick Setup builds the standard Asterisk WSS URL and SIP URI from the PBX host and extension. Exported configuration files exclude the SIP password unless it is explicitly included.
 
 Diagnostic reports exclude SIP passwords, TURN credentials and raw device identifiers.
+
+Telephony preferences default to blind transfer, call waiting enabled, classic ringtone and unchanged dialed numbers. WebHID, SIP MESSAGE and BLF remain disabled until explicitly enabled.
 
 ## Data storage and privacy
 
