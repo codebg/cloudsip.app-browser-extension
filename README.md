@@ -22,8 +22,12 @@ CloudSIP Browser Extension packages the CloudSIP WebRTC SIP softphone as a Chrom
 
 - Opens as a Chrome/Edge side panel when the extension icon is clicked.
 - Falls back to a focused popup window on browsers that do not support the side panel API.
-- Injects an optional click-to-call content script into webpages.
+- Requests access only for websites explicitly enabled by the user; no website access is granted by default.
+- Uses whitelist mode by default, with blacklist mode available as a preference for already granted sites.
 - Detects `tel:` links and phone-number-like text, then adds a CloudSIP call button beside valid numbers.
+- Provides a **Call with CloudSIP** context menu for selected numbers and telephone links.
+- Normalizes local numbers by an optional country preference while leaving numbers unchanged by default.
+- Exposes an optional local CRM bridge through JavaScript events, `postMessage`, `cloudsip:` links, and extension messaging.
 - Supports rescanning the current page from Settings after dynamic page content loads.
 
 ### Contacts and call history
@@ -102,6 +106,7 @@ CloudSIP stores extension data locally in the browser profile:
 - Contacts and call logs are stored locally.
 - Recordings are stored locally until downloaded or cleared.
 - No backend service is required by default.
+- Domain permissions, click-to-call rules, and CRM origin lists are stored locally.
 
 Do not commit real SIP passwords, production credentials, or customer call data to this repository.
 
