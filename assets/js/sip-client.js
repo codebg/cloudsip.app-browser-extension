@@ -8,6 +8,8 @@ let registered = false;
 let started = false;
 let eventHandlers = {};
 let currentAudioSession = null;
+let recoveryBound = false;
+let lastWakeCheck = Date.now();
 
 const sessionEvents = ['progress', 'accepted', 'confirmed', 'ended', 'failed', 'bye', 'rejected', 'canceled'];
 
@@ -88,7 +90,7 @@ function getSessionOptions(){
   return {
     mediaConstraints: getMediaConstraints(),
     pcConfig: {
-      iceServers: []
+      iceServers: Array.isArray(sipConfig?.iceServers) ? sipConfig.iceServers : []
     }
   };
 }
@@ -318,7 +320,9 @@ export async function initSipClient(config, handlers = {}){
     password: config.password,
     display_name: config.displayName,
     register: getUserPresence() !== 'Offline',
-    session_timers: false
+    session_timers: config.sessionTimers !== false,
+    connection_recovery_min_interval: Number(config.reconnectMinSeconds) || 2,
+    connection_recovery_max_interval: Number(config.reconnectMaxSeconds) || 30
   });
 
   sipUA.on('connecting', () => {
@@ -332,8 +336,8 @@ export async function initSipClient(config, handlers = {}){
 
   sipUA.on('disconnected', () => {
     setConnectionInfo('Disconnected');
-    setOffline();
-    showWarning('SIP disconnected');
+    registered = false;
+    setSipStatus(navigator.onLine ? 'Reconnecting' : 'Network offline', 'is-offline');
   });
 
   sipUA.on('registered', () => {
@@ -366,7 +370,47 @@ export async function initSipClient(config, handlers = {}){
     setOffline();
   }
 
+  bindRecoveryEvents();
+
   return sipUA;
+}
+
+function recoverSipConnection(){
+  if (!sipUA || getUserPresence() === 'Offline' || !navigator.onLine) return false;
+  setConnectionInfo('Reconnecting');
+  setSipStatus('Reconnecting', 'is-offline');
+  try {
+    if (!started) {
+      sipUA.start();
+      started = true;
+    } else if (!registered) {
+      sipUA.register();
+    }
+    return true;
+  } catch (error) {
+    console.warn('Unable to recover SIP connection', error);
+    return false;
+  }
+}
+
+function bindRecoveryEvents(){
+  if (recoveryBound) return;
+  recoveryBound = true;
+  window.addEventListener('online', recoverSipConnection);
+  window.addEventListener('offline', () => {
+    registered = false;
+    setConnectionInfo('Network offline');
+    setSipStatus('Network offline', 'is-offline');
+  });
+  window.setInterval(() => {
+    const now = Date.now();
+    const resumed = now - lastWakeCheck > 45000;
+    lastWakeCheck = now;
+    if (resumed) recoverSipConnection();
+  }, 15000);
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) recoverSipConnection();
+  });
 }
 
 export async function registerSip(){
