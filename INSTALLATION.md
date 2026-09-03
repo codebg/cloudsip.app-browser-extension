@@ -51,6 +51,8 @@ Your SIP server must support WebRTC media and SIP over WebSocket. For production
 6. Use **Reconnect SIP** in **WebRTC Diagnostics** if the phone does not register automatically.
 7. Confirm that the header status changes from **Offline** to a registered/online state.
 
+For networks that require NAT traversal, add one or more STUN or TURN URLs in SIP Settings. Add one URL per line. SIP session timers are enabled by default, and CloudSIP retries registration after network restoration or browser wake.
+
 ## 5. Enable click-to-call on websites
 
 CloudSIP can add call buttons beside phone numbers on webpages.
