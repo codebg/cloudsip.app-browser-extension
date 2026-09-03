@@ -74,6 +74,15 @@
           <div class="number-input" id="numberDisplay">Enter number...</div>
         </div>
 
+        <div class="recent-dial-row"><button class="recent-dial-button" id="redialBtn" type="button">Redial</button><div id="recentDialNumbers"></div></div>
+
+        <div class="sip-message-panel" id="sipMessagePanel" hidden>
+          <input id="sipMessageTarget" type="text" placeholder="Extension">
+          <textarea id="sipMessageBody" rows="2" placeholder="SIP message"></textarea>
+          <button id="sendSipMessage" type="button">Send message</button>
+          <div id="sipMessageInbox" aria-live="polite"></div>
+        </div>
+
         <div class="keypad" id="keypad">
           <button class="key" data-key="1"><b>1</b><span></span></button>
           <button class="key" data-key="2"><b>2</b><span>ABC</span></button>
@@ -423,6 +432,35 @@
               </div>
             </div>
           </div>
+
+          <div class="settings-accordion" data-settings-section="telephony">
+            <button class="settings-accordion-header" type="button" data-settings-accordion="telephony">
+              <span class="settings-accordion-icon"><i class="ti ti-phone-cog" aria-hidden="true"></i></span>
+              <span class="settings-accordion-title"><strong>Telephony preferences</strong><span>Defaults, routing and optional modules</span></span>
+              <i class="ti ti-chevron-down settings-accordion-chevron" aria-hidden="true"></i>
+            </button>
+            <div class="settings-accordion-body" data-settings-accordion-body="telephony">
+              <div class="form-group">
+                <label for="settingsTransferMode">Default transfer method</label>
+                <select class="settings-select" id="settingsTransferMode"><option value="blind">Blind transfer</option><option value="attended">Attended transfer</option></select>
+              </div>
+              <div class="toggle-row"><input id="settingsCallWaiting" type="checkbox"><label for="settingsCallWaiting"><strong>Call waiting</strong><span>Accept a second incoming call while another call is active.</span></label></div>
+              <div class="form-group">
+                <label for="settingsRingtoneStyle">Profile ringtone</label>
+                <select class="settings-select" id="settingsRingtoneStyle"><option value="classic">Classic ringtone</option><option value="silent">Silent</option></select>
+              </div>
+              <div class="form-group">
+                <label for="settingsDialPlanRules">Dial-plan rules</label>
+                <textarea class="settings-input" id="settingsDialPlanRules" rows="3" placeholder="^00 => +&#10;^0([1-9][0-9]+) => +355$1"></textarea>
+                <div class="settings-help">One pattern and replacement per line. Numbers remain unchanged by default.</div>
+              </div>
+              <div class="toggle-row"><input id="settingsHeadsetControls" type="checkbox"><label for="settingsHeadsetControls"><strong>WebHID headset controls</strong><span>Disabled by default and requires explicit device permission.</span></label></div>
+              <div class="settings-actions"><button class="settings-btn secondary" id="connectHeadset" type="button">Connect headset</button><span class="settings-help" id="headsetStatus">Not connected</span></div>
+              <div class="toggle-row"><input id="settingsSipMessageEnabled" type="checkbox"><label for="settingsSipMessageEnabled"><strong>SIP MESSAGE module</strong><span>Optional and disabled by default.</span></label></div>
+              <div class="toggle-row"><input id="settingsBlfEnabled" type="checkbox"><label for="settingsBlfEnabled"><strong>BLF module</strong><span>Optional and disabled by default; requires PBX support.</span></label></div>
+            </div>
+          </div>
+
 
           <div class="settings-accordion" data-settings-section="diagnostics">
             <button class="settings-accordion-header" type="button" data-settings-accordion="diagnostics">
