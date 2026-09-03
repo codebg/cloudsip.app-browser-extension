@@ -5,6 +5,7 @@ import { setTheme } from './theme-manager.js';
 import { clearRecordingBlobs } from './recording-db.js';
 import { deleteSipProfile, getActiveSipProfileId, getSipProfiles, loadSipProfile, saveSipProfile } from './sip-profile-store.js';
 import { downloadConfiguration, parseConfigurationImport } from './configuration-transfer.js';
+import { domainPattern, normalizeDomainList } from '../../phone-normalizer.js';
 
 const fields = {
   companyWebsite: 'settingsCompanyWebsite',
@@ -28,6 +29,12 @@ const fields = {
   blfEnabled: 'settingsBlfEnabled',
   clickToCallEnabled: 'settingsClickToCallEnabled',
   clickToCallAutoDial: 'settingsClickToCallAutoDial',
+  clickToCallMode: 'settingsClickToCallMode',
+  allowedDomains: 'settingsAllowedDomains',
+  blockedDomains: 'settingsBlockedDomains',
+  defaultCountry: 'settingsDefaultCountry',
+  crmIntegrationEnabled: 'settingsCrmIntegrationEnabled',
+  crmAllowedOrigins: 'settingsCrmAllowedOrigins',
   theme: 'settingsTheme'
 };
 
@@ -42,7 +49,7 @@ function setFieldValue(id, value){
   if (element.type === 'checkbox') {
     element.checked = Boolean(value);
   } else {
-    element.value = value ?? '';
+    element.value = Array.isArray(value) ? value.join('\n') : value ?? '';
   }
 }
 
@@ -130,6 +137,12 @@ function collectSettings(){
     blfEnabled: getFieldValue(fields.blfEnabled),
     clickToCallEnabled: getFieldValue(fields.clickToCallEnabled),
     clickToCallAutoDial: getFieldValue(fields.clickToCallAutoDial),
+    clickToCallMode: getFieldValue(fields.clickToCallMode),
+    allowedDomains: normalizeDomainList(getFieldValue(fields.allowedDomains)),
+    blockedDomains: normalizeDomainList(getFieldValue(fields.blockedDomains)),
+    defaultCountry: getFieldValue(fields.defaultCountry),
+    crmIntegrationEnabled: getFieldValue(fields.crmIntegrationEnabled),
+    crmAllowedOrigins: normalizeDomainList(getFieldValue(fields.crmAllowedOrigins)),
     theme: getFieldValue(fields.theme)
   };
 }
@@ -257,16 +270,66 @@ async function rescanCurrentPage(){
   }
 }
 
+async function applyBrowserSettings(){
+  if (!globalThis.chrome?.runtime?.sendMessage) return;
+  await chrome.runtime.sendMessage({ type: 'CLOUDSIP_APPLY_BROWSER_SETTINGS' });
+}
+
+async function currentPage(){
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  const pattern = domainPattern(tab?.url);
+  if (!tab?.id || !pattern) throw new Error('Open a normal HTTP or HTTPS page first.');
+  return { tab, pattern };
+}
+
+async function enableCurrentSite(){
+  try {
+    const { tab, pattern } = await currentPage();
+    const granted = await chrome.permissions.request({ origins: [pattern] });
+    if (!granted) return showWarning('Website access was not granted.');
+    const settings = collectSettings();
+    settings.clickToCallEnabled = true;
+    settings.allowedDomains = [...new Set([...settings.allowedDomains, pattern])];
+    const saved = saveSettings(settings);
+    renderSettingsForm(saved);
+    await applyBrowserSettings();
+    await chrome.scripting.insertCSS({ target: { tabId: tab.id }, files: ['content-script.css'] });
+    await chrome.scripting.executeScript({ target: { tabId: tab.id }, files: ['content-script.js'] });
+    showSuccess('CloudSIP enabled for this website.');
+  } catch (error) {
+    showWarning(error.message || 'Unable to enable this website.');
+  }
+}
+
+async function removeCurrentSite(){
+  try {
+    const { pattern } = await currentPage();
+    await chrome.permissions.remove({ origins: [pattern] });
+    const settings = collectSettings();
+    settings.allowedDomains = settings.allowedDomains.filter((item) => item !== pattern);
+    settings.blockedDomains = [...new Set([...settings.blockedDomains, pattern])];
+    const saved = saveSettings(settings);
+    renderSettingsForm(saved);
+    await applyBrowserSettings();
+    showSuccess('CloudSIP access removed for this website. Reload the page to apply.');
+  } catch (error) {
+    showWarning(error.message || 'Unable to remove this website.');
+  }
+}
+
 function bindSettingsButtons(){
   getElement(fields.theme)?.addEventListener('change', (event) => {
     setTheme(event.target.value);
   });
 
   getElement('rescanCurrentPage')?.addEventListener('click', rescanCurrentPage);
+  getElement('enableCurrentSite')?.addEventListener('click', enableCurrentSite);
+  getElement('removeCurrentSite')?.addEventListener('click', removeCurrentSite);
 
-  getElement('saveSettings')?.addEventListener('click', () => {
+  getElement('saveSettings')?.addEventListener('click', async () => {
     const settings = saveSettings(collectSettings());
     renderSettingsForm(settings);
+    await applyBrowserSettings();
     showSuccess('Settings saved and applied');
   });
 
