@@ -59,16 +59,37 @@ Quick Setup uses port `8089` and path `/ws` unless the PBX host includes a port.
 
 CloudSIP can add call buttons beside phone numbers on webpages.
 
-1. Open **Settings**.
-2. In **Behavior**, enable **Enable number detection on websites**.
-3. Optionally enable **Auto dial clicked number** to start calls immediately after clicking a detected number.
-4. Open or refresh a webpage that contains phone numbers.
-5. Click the CloudSIP call button beside a detected number.
-6. If the page loads numbers dynamically, click **Rescan current page** in Settings.
+1. Open the website where click-to-call is needed.
+2. Open CloudSIP **Settings** and expand **Browser integration**.
+3. Click **Enable current site** and approve the exact domain permission.
+4. Keep **Whitelist** as the default policy, or select the blacklist preference for previously granted sites.
+5. Optionally select a country for local-number normalization and enable automatic dialing.
+6. Refresh the website, then click the CloudSIP button beside a detected number.
+7. If the page loads numbers dynamically, click **Rescan**.
+
+Click-to-call, automatic dialing, country prefixes, and CRM integration are disabled or neutral by default. **Remove current site** revokes the domain permission and adds it to the blocked list.
+
+## 6. CRM integration API
+
+Enable **CRM integration API**, add the CRM origin, and grant that website access with **Enable current site**. The CRM page can request a call using any of these local browser mechanisms:
+
+```js
+window.dispatchEvent(new CustomEvent('cloudsip:call', {
+  detail: { number: '+355XXXXXXXXX', autoStart: false }
+}));
+
+window.postMessage({
+  type: 'CLOUDSIP_CALL',
+  number: '+355XXXXXXXXX',
+  autoStart: false
+}, window.location.origin);
+```
+
+Links can use `cloudsip://call?number=%2B355XXXXXXXXX`. The page receives `cloudsip:ready` and `cloudsip:call-status` events, plus equivalent `CLOUDSIP_READY` and `CLOUDSIP_CALL_STATUS` messages. All communication stays in the browser; CloudSIP does not require a backend.
 
 The extension intentionally avoids scanning forms, buttons, links, code blocks, scripts, and some date/price patterns to reduce false positives.
 
-## 6. Updating the unpacked extension
+## 7. Updating the unpacked extension
 
 When files in `extension/` change:
 
@@ -80,7 +101,7 @@ When files in `extension/` change:
 
 If behavior looks stale, fully remove the extension and load the unpacked folder again.
 
-## 7. Troubleshooting
+## 8. Troubleshooting
 
 ### Microphone permission is blocked
 
@@ -105,13 +126,14 @@ If behavior looks stale, fully remove the extension and load the unpacked folder
 
 ### Click-to-call buttons do not appear
 
-- Confirm **Enable number detection on websites** is enabled.
+- Confirm **Website click-to-call** is enabled.
+- Confirm the current site appears in **Allowed domains** and its browser permission is granted.
 - Refresh the webpage.
 - Click **Rescan current page** from Settings.
 - Confirm the page is not a restricted browser page such as `chrome://extensions`, where content scripts cannot run.
 - Check that the number has at least seven digits and is not inside an ignored element such as an input, button, code block, or existing link.
 
-## 8. Uninstall
+## 9. Uninstall
 
 1. Open `chrome://extensions` or `edge://extensions`.
 2. Find **CloudSIP**.

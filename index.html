@@ -415,21 +415,29 @@
                 <input id="settingsAutoHoldOnSwitch" type="checkbox">
                 <label for="settingsAutoHoldOnSwitch"><strong>Auto hold on line switch</strong><span>Hold the active call when switching lines.</span></label>
               </div>
-              <div class="toggle-row">
-                <input id="settingsClickToCallEnabled" type="checkbox">
-                <label for="settingsClickToCallEnabled"><strong>Enable number detection on websites</strong><span>Add CloudSIP call buttons beside phone numbers on webpages.</span></label>
-              </div>
-              <div class="toggle-row">
-                <input id="settingsClickToCallAutoDial" type="checkbox">
-                <label for="settingsClickToCallAutoDial"><strong>Auto dial clicked number</strong><span>Start a call immediately when a website number is clicked.</span></label>
-              </div>
-              <div class="settings-actions">
-                <button class="settings-btn secondary" id="rescanCurrentPage" type="button">Rescan current page</button>
-              </div>
               <div class="form-group">
                 <label for="settingsTheme">Theme</label>
                 <select class="settings-select" id="settingsTheme"><option value="light">Light</option><option value="dark">Dark</option></select>
               </div>
+            </div>
+          </div>
+
+          <div class="settings-accordion" data-settings-section="browser">
+            <button class="settings-accordion-header" type="button" data-settings-accordion="browser">
+              <span class="settings-accordion-icon"><i class="ti ti-world" aria-hidden="true"></i></span>
+              <span class="settings-accordion-title"><strong>Browser integration</strong><span>Domain access, number rules and CRM bridge</span></span>
+              <i class="ti ti-chevron-down settings-accordion-chevron" aria-hidden="true"></i>
+            </button>
+            <div class="settings-accordion-body" data-settings-accordion-body="browser">
+              <div class="toggle-row"><input id="settingsClickToCallEnabled" type="checkbox"><label for="settingsClickToCallEnabled"><strong>Website click-to-call</strong><span>Disabled by default. Website access is requested only when enabled.</span></label></div>
+              <div class="form-group"><label for="settingsClickToCallMode">Domain policy</label><select class="settings-select" id="settingsClickToCallMode"><option value="whitelist">Whitelist (default)</option><option value="blacklist">All granted sites except blacklist</option></select></div>
+              <div class="form-group"><label for="settingsAllowedDomains">Allowed domains</label><textarea class="settings-input" id="settingsAllowedDomains" rows="3" placeholder="https://crm.example.com/*"></textarea><div class="settings-help">One exact domain pattern per line.</div></div>
+              <div class="form-group"><label for="settingsBlockedDomains">Blocked domains</label><textarea class="settings-input" id="settingsBlockedDomains" rows="3" placeholder="https://private.example.com/*"></textarea></div>
+              <div class="settings-actions"><button class="settings-btn primary" id="enableCurrentSite" type="button">Enable current site</button><button class="settings-btn secondary" id="removeCurrentSite" type="button">Remove current site</button><button class="settings-btn secondary" id="rescanCurrentPage" type="button">Rescan</button></div>
+              <div class="form-group"><label for="settingsDefaultCountry">Default number country</label><select class="settings-select" id="settingsDefaultCountry"><option value="NONE">Keep number unchanged (default)</option><option value="AL">Albania (+355)</option><option value="IT">Italy (+39)</option><option value="GB">United Kingdom (+44)</option><option value="DE">Germany (+49)</option><option value="FR">France (+33)</option><option value="US">United States/Canada (+1)</option></select></div>
+              <div class="toggle-row"><input id="settingsClickToCallAutoDial" type="checkbox"><label for="settingsClickToCallAutoDial"><strong>Auto dial website numbers</strong><span>Optional. Opens the dialer without starting the call by default.</span></label></div>
+              <div class="toggle-row"><input id="settingsCrmIntegrationEnabled" type="checkbox"><label for="settingsCrmIntegrationEnabled"><strong>CRM integration API</strong><span>Optional JavaScript events, postMessage and cloudsip: links. No backend.</span></label></div>
+              <div class="form-group"><label for="settingsCrmAllowedOrigins">CRM origins</label><textarea class="settings-input" id="settingsCrmAllowedOrigins" rows="3" placeholder="https://crm.example.com/*"></textarea><div class="settings-help">Only listed origins can send CRM call requests.</div></div>
             </div>
           </div>
 

@@ -26,8 +26,14 @@ export const defaultSettings = Object.freeze({
   headsetControls: false,
   sipMessageEnabled: false,
   blfEnabled: false,
-  clickToCallEnabled: defaultConfig.settings.clickToCallEnabled ?? true,
+  clickToCallEnabled: defaultConfig.settings.clickToCallEnabled ?? false,
   clickToCallAutoDial: defaultConfig.settings.clickToCallAutoDial ?? false,
+  clickToCallMode: 'whitelist',
+  allowedDomains: [],
+  blockedDomains: [],
+  defaultCountry: 'NONE',
+  crmIntegrationEnabled: false,
+  crmAllowedOrigins: [],
   theme: defaultConfig.settings.theme,
   audioDevices: {
     inputDeviceId: '',
@@ -94,8 +100,14 @@ function normalizeSettings(settings = {}){
   nextSettings.headsetControls = Boolean(nextSettings.headsetControls);
   nextSettings.sipMessageEnabled = Boolean(nextSettings.sipMessageEnabled);
   nextSettings.blfEnabled = Boolean(nextSettings.blfEnabled);
-  nextSettings.clickToCallEnabled = nextSettings.clickToCallEnabled !== false;
+  nextSettings.clickToCallEnabled = Boolean(nextSettings.clickToCallEnabled);
   nextSettings.clickToCallAutoDial = Boolean(nextSettings.clickToCallAutoDial);
+  nextSettings.clickToCallMode = nextSettings.clickToCallMode === 'blacklist' ? 'blacklist' : 'whitelist';
+  nextSettings.allowedDomains = Array.isArray(nextSettings.allowedDomains) ? nextSettings.allowedDomains.map(String).filter(Boolean) : [];
+  nextSettings.blockedDomains = Array.isArray(nextSettings.blockedDomains) ? nextSettings.blockedDomains.map(String).filter(Boolean) : [];
+  nextSettings.defaultCountry = ['NONE', 'AL', 'IT', 'GB', 'DE', 'FR', 'US'].includes(nextSettings.defaultCountry) ? nextSettings.defaultCountry : 'NONE';
+  nextSettings.crmIntegrationEnabled = Boolean(nextSettings.crmIntegrationEnabled);
+  nextSettings.crmAllowedOrigins = Array.isArray(nextSettings.crmAllowedOrigins) ? nextSettings.crmAllowedOrigins.map(String).filter(Boolean) : [];
   nextSettings.theme = nextSettings.theme === 'dark' ? 'dark' : 'light';
 
   return nextSettings;
@@ -153,7 +165,13 @@ export function saveSettings(settings){
   if (globalThis.chrome?.storage?.local) {
     globalThis.chrome.storage.local.set({
       clickToCallEnabled: nextSettings.clickToCallEnabled,
-      clickToCallAutoDial: nextSettings.clickToCallAutoDial
+      clickToCallAutoDial: nextSettings.clickToCallAutoDial,
+      clickToCallMode: nextSettings.clickToCallMode,
+      allowedDomains: nextSettings.allowedDomains,
+      blockedDomains: nextSettings.blockedDomains,
+      defaultCountry: nextSettings.defaultCountry,
+      crmIntegrationEnabled: nextSettings.crmIntegrationEnabled,
+      crmAllowedOrigins: nextSettings.crmAllowedOrigins
     });
   }
 
