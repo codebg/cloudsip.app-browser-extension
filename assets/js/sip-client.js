@@ -362,6 +362,16 @@ export async function initSipClient(config, handlers = {}){
   });
 
   sipUA.on('newRTCSession', handleNewRTCSession);
+  sipUA.on('newMessage', (event) => {
+    if (event.originator !== 'remote') return;
+    window.dispatchEvent(new CustomEvent('sip:message', {
+      detail: {
+        from: event.request?.from?.uri?.user || 'Unknown',
+        body: String(event.request?.body || ''),
+        receivedAt: new Date().toISOString()
+      }
+    }));
+  });
 
   if (getUserPresence() !== 'Offline') {
     sipUA.start();
@@ -497,6 +507,21 @@ export function isSipRegistered(){
   return registered;
 }
 
+export function sendSipMessage(targetNumber, body){
+  if (!sipUA || !registered || typeof sipUA.sendMessage !== 'function') return false;
+  const target = normalizeSipTarget(targetNumber);
+  const message = String(body || '').trim();
+  if (!target || !message) return false;
+  sipUA.sendMessage(target, message, {
+    contentType: 'text/plain',
+    eventHandlers: {
+      succeeded: () => showSuccess('SIP message sent'),
+      failed: () => showError('SIP message failed')
+    }
+  });
+  return true;
+}
+
 
 export function createOutgoingSession(number, eventHandlers = {}){
   if (!sipUA || !registered) {
@@ -593,7 +618,7 @@ export function blindTransferSession(session, targetNumber){
 
   try {
     console.log('Starting blind transfer', { target });
-    session.refer(target, {
+    const subscriber = session.refer(target, {
       eventHandlers: {
         requestSucceeded: (event) => console.log('Blind transfer REFER request succeeded', event),
         requestFailed: (event) => {
@@ -608,10 +633,39 @@ export function blindTransferSession(session, targetNumber){
       }
     });
     showSuccess('Transfer sent');
-    return true;
+    return Boolean(subscriber);
   } catch (error) {
     console.error('Blind transfer failed:', error);
     showError('Transfer failed');
+    return false;
+  }
+}
+
+export function attendedTransferSession(session, replacementSession, targetNumber){
+  if (!session || !replacementSession) {
+    showError('Attended transfer is not ready');
+    return false;
+  }
+
+  const target = normalizeSipTarget(targetNumber);
+  if (!target) {
+    showError('Transfer failed');
+    return false;
+  }
+
+  try {
+    const subscriber = session.refer(target, {
+      replaces: replacementSession,
+      eventHandlers: {
+        requestFailed: () => showError('Attended transfer request failed'),
+        accepted: () => showSuccess('Attended transfer accepted'),
+        failed: () => showError('Attended transfer failed')
+      }
+    });
+    return Boolean(subscriber);
+  } catch (error) {
+    console.error('Attended transfer failed', error);
+    showError('Attended transfer failed');
     return false;
   }
 }

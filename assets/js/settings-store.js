@@ -19,6 +19,13 @@ export const defaultSettings = Object.freeze({
   autoAnswer: defaultConfig.settings.autoAnswer,
   autoRecordCalls: defaultConfig.settings.autoRecordCalls,
   autoHoldOnSwitch: defaultConfig.settings.autoHoldOnSwitch,
+  transferMode: 'blind',
+  callWaiting: true,
+  dialPlanRules: '',
+  ringtoneStyle: 'classic',
+  headsetControls: false,
+  sipMessageEnabled: false,
+  blfEnabled: false,
   clickToCallEnabled: defaultConfig.settings.clickToCallEnabled ?? true,
   clickToCallAutoDial: defaultConfig.settings.clickToCallAutoDial ?? false,
   theme: defaultConfig.settings.theme,
@@ -80,6 +87,13 @@ function normalizeSettings(settings = {}){
   nextSettings.autoAnswer = Boolean(nextSettings.autoAnswer);
   nextSettings.autoRecordCalls = Boolean(nextSettings.autoRecordCalls);
   nextSettings.autoHoldOnSwitch = Boolean(nextSettings.autoHoldOnSwitch);
+  nextSettings.transferMode = nextSettings.transferMode === 'attended' ? 'attended' : 'blind';
+  nextSettings.callWaiting = nextSettings.callWaiting !== false;
+  nextSettings.dialPlanRules = String(nextSettings.dialPlanRules || '');
+  nextSettings.ringtoneStyle = nextSettings.ringtoneStyle === 'silent' ? 'silent' : 'classic';
+  nextSettings.headsetControls = Boolean(nextSettings.headsetControls);
+  nextSettings.sipMessageEnabled = Boolean(nextSettings.sipMessageEnabled);
+  nextSettings.blfEnabled = Boolean(nextSettings.blfEnabled);
   nextSettings.clickToCallEnabled = nextSettings.clickToCallEnabled !== false;
   nextSettings.clickToCallAutoDial = Boolean(nextSettings.clickToCallAutoDial);
   nextSettings.theme = nextSettings.theme === 'dark' ? 'dark' : 'light';
