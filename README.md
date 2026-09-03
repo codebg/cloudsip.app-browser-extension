@@ -40,6 +40,10 @@ CloudSIP Browser Extension packages the CloudSIP WebRTC SIP softphone as a Chrom
 - Use WebRTC diagnostics for browser support, permission state, SIP registration, WebSocket state, ICE state, and active media-track information.
 - Configure STUN and TURN servers for networks that require NAT traversal.
 - Recover SIP registration after network restoration and browser wake.
+- Use quick or advanced SIP setup.
+- Save multiple local SIP profiles.
+- Import and export configuration files.
+- Keep SIP passwords for the current browser session only.
 
 ### Preferences and productivity
 
@@ -78,6 +82,8 @@ Chrome or Edge are recommended because side panel, microphone permissions, and a
 - HTTPS/WSS SIP signaling in production environments.
 
 STUN and TURN are optional. Direct connections remain the default when no ICE servers are configured.
+
+Quick Setup builds the standard Asterisk WSS URL and SIP URI from the PBX host and extension. Exported configuration files exclude the SIP password unless it is explicitly included.
 
 ## Data storage and privacy
 
