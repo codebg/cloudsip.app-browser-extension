@@ -2030,6 +2030,9 @@ body{padding:0}
 .device-actions{gap:8px}
 .device-actions button{min-height:40px}
 .diagnostics-actions{display:grid;gap:8px;margin-top:12px}
+.diagnostics-grid .diagnostics-wide{grid-column:1 / -1}
+.diagnostics-grid strong.is-success{color:var(--green)}
+.diagnostics-grid strong.is-error{color:var(--red)}
 @media (max-height: 720px){
   #view-dial .number-card{min-height:70px;margin-bottom:10px}
   #view-dial .key{min-height:48px}
