@@ -1,6 +1,6 @@
 # CloudSIP Browser Extension
 
-Current stable version: **1.0.1**. CloudSIP follows Semantic Versioning. Stable releases are the default; prerelease labels are optional for future testing builds.
+Current stable version: **1.1.0**. CloudSIP follows Semantic Versioning. Stable releases are the default; prerelease labels are optional for future testing builds.
 
 ![CloudSIP Banner](screens/screen.png)
 
@@ -51,6 +51,7 @@ CloudSIP Browser Extension packages the CloudSIP WebRTC SIP softphone as a Chrom
 - Test the configured WSS endpoint independently and export a sanitized diagnostic report.
 - Configure STUN and TURN servers for networks that require NAT traversal.
 - Recover SIP registration after network restoration and browser wake.
+- Keep idle WSS transports active and recover both transport and SIP registration failures with bounded exponential backoff.
 - Use quick or advanced SIP setup.
 - Save multiple local SIP profiles.
 - Import and export configuration files.

@@ -85,6 +85,8 @@ The extension requests no website access by default. Enable only the current CRM
 | Website buttons do not appear | Exact domain permission, whitelist and page reload |
 | Registration drops after sleep | Network recovery status and session timer compatibility |
 
+CloudSIP sends a lightweight CRLF transport keepalive while registered. Reverse proxies and firewalls must allow idle WSS connections and SIP keepalive frames instead of enforcing a shorter connection timeout.
+
 ## Support boundary
 
 CloudSIP controls the browser-side SIP/WebRTC client. PBX dial plans, trunks, certificates, NAT, firewall rules, codecs and distribution-specific GUI behavior remain part of the PBX deployment.
