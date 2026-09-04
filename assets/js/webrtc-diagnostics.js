@@ -133,7 +133,13 @@ export async function refreshWebRtcDiagnostics(){
     speakerSelectionSupported: supported(capabilities.speakerSelectionSupported), secureContext: yesNo(capabilities.secureContext), webRtcSupported: yesNo(capabilities.webRtcSupported)
   };
   Object.entries(values).forEach(([key, value]) => setValue(fields[key], value));
-  latestSnapshot = { capturedAt: new Date().toISOString(), ...values };
+  latestSnapshot = {
+    capturedAt: new Date().toISOString(),
+    ...values,
+    recoveryAttempt: sip.recoveryAttempt,
+    lastRegistrationFailure: sip.lastRegistrationFailure,
+    connectionEvents: sip.connectionEvents
+  };
   return latestSnapshot;
 }
 
