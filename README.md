@@ -1,5 +1,7 @@
 # CloudSIP Browser Extension
 
+Current stable version: **1.0.0**. CloudSIP follows Semantic Versioning. Stable releases are the default; prerelease labels are optional for future testing builds.
+
 ![CloudSIP Banner](screens/screen.png)
 
 CloudSIP Browser Extension packages the CloudSIP WebRTC SIP softphone as a Chromium Manifest V3 extension. It gives agents a compact side-panel phone, website click-to-call buttons, SIP registration, contacts, call history, local recordings, and diagnostics without requiring a backend or build step.
@@ -65,6 +67,8 @@ CloudSIP Browser Extension packages the CloudSIP WebRTC SIP softphone as a Chrom
 ## Installation
 
 See [`INSTALLATION.md`](INSTALLATION.md) for detailed installation, update, configuration, testing, and troubleshooting steps.
+
+See the [compatibility guide](docs/COMPATIBILITY.md) for Asterisk, FreePBX, Issabel and VitalPBX requirements. Release changes are listed in the [changelog](CHANGELOG.md).
 
 Quick install for development/testing:
 
