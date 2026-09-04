@@ -1,6 +1,6 @@
 # CloudSIP Browser Extension
 
-Current stable version: **1.0.0**. CloudSIP follows Semantic Versioning. Stable releases are the default; prerelease labels are optional for future testing builds.
+Current stable version: **1.0.1**. CloudSIP follows Semantic Versioning. Stable releases are the default; prerelease labels are optional for future testing builds.
 
 ![CloudSIP Banner](screens/screen.png)
 

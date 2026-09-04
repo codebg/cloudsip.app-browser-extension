@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.1] - 2026-09-04
+
+- Fixed Quick Setup and Advanced Setup fields appearing at the same time in SIP account settings.
+
 ## [1.0.0] - 2026-09-04
 
 - Added configurable STUN, TURN and SIP session timers.
