@@ -2029,6 +2029,7 @@ body{padding:0}
 .settings-accordion.open .settings-accordion-body{display:block}
 .settings-form{display:grid;gap:10px}
 .settings-subsection{display:grid;gap:10px}
+.settings-subsection[hidden]{display:none}
 .settings-input:is(textarea){height:auto;min-height:76px;padding:10px 13px;resize:vertical}
 .form-group{display:grid;gap:5px}
 .form-group label{font-size:12px;font-weight:900;color:var(--ink)}
